@@ -102,7 +102,7 @@ def multiInverse(e, phi):
         x, x1 = x1 - q * x, x
         y, y1 = y1 - q * y, y
 
-    if x1 < 0:
+    if x1 < 2:
         #print(phi + x1)
         return phi + x1
     #print(x1)
