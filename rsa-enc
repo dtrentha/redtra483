@@ -1,0 +1,2 @@
+#!/bin/bash
+python rsaLib.py rsa-enc $@
