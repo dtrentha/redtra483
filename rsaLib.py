@@ -4,6 +4,8 @@ import random
 import sys
 import numpy as np
 import argparse
+import os
+import struct
 
 def factory(n):
      s = 0
@@ -79,14 +81,14 @@ def miler_rabin(n):
 def get_prime(key_length):
     n = random.getrandbits(key_length)
 
-    while miler_rabin(n) == False:
+    while miler_rabin(n) == False and n.bit_length() != key_length:
         n = random.getrandbits(key_length)
     return n
 
 def gcd(a,b):
     while b != 0:
         a , b = b, a % b
-    print(a)
+    #print(a)
     return a
 
 def multiInverse(e, phi):
@@ -111,25 +113,52 @@ def multiInverse(e, phi):
 
 def rsaKeyGen(b):
 
-    p = get_prime(b/2)
-    q = get_prime(b/2)
-
-    while p == q:
-        q = get_prime(b/2)
-
+    p = get_prime(b//2)
+    q = get_prime(b//2)
     n = p * q
-    phi = (p -1) * (q - 1)
 
-    e = 17
+    while p == q and n.bit_length() != b:
+        q = get_prime(b/2)
+        n = p * q
+
+
+    #print(p.bit_length())
+    #print(q.bit_length())
+    #print(n.bit_length())
+    phi = (p - 1) * (q - 1)
+
+    for e in range(3, 1000):
+        g = gcd(e, phi)
+        if g == 1:
+            break
 
     d = multiInverse(e, phi)
 
     return(n, e, d)
 
-def rsaEncrypt(m, e, n):
-    return powMod(m, e, n)
+def goodRandom(r):
+    for bit in r:
+        if bit == '\x00':
+            return 0
 
-def rsaDecrypt(c, d, n):
+    return 1
+
+
+def rsaEncrypt(m, e, n, bits):
+
+    c = 0
+    while c == 0:
+        r = os.urandom(bits / 2)
+        c = goodRandom(r)
+    print(m)
+    m = int(m)
+    padding = b''.join([b'\x00\x02',r,b'\x00'])
+
+
+
+    return powMod(message, e, n)
+
+def rsaDecrypt(c, d, n, bits):
     return powMod(c, d, n)
 
 def main():
@@ -160,13 +189,13 @@ def main():
 
         if args.i != None:
             iF = open(args.i, 'r')
-            m = int(iF.readline())
+            m = iF.readline()
             iF.close()
 
         if args.o != None:
             oF = open(args.o, 'wb')
 
-        oF.write(str(rsaEncrypt(m, e, n)) + '\n')
+        oF.write(str(rsaEncrypt(m, e, n, bits)) + '\n')
         oF.close()
         return
 
@@ -188,7 +217,7 @@ def main():
         if args.o != None:
             oF = open(args.o, 'wb')
 
-        oF.write(str(rsaDecrypt(c, d, n)) + '\n')
+        oF.write(str(rsaDecrypt(c, d, n, bits)) + '\n')
         oF.close()
         return
 
