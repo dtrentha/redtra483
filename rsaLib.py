@@ -197,9 +197,8 @@ def rsaDecrypt(cipher, d, n, bits):
         if mess[i] == '00':
             mess = mess[i+1:]
             break
-    #print(mess)
+    print(mess)
     m = ''
-
     for i in mess:
         print(i)
         m = m + binascii.unhexlify(i).decode('utf-8')
