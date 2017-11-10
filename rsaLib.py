@@ -165,7 +165,7 @@ def rsaPad(message, rbits):
 
     pad = "0002"
     r = goodRandom(rbits)
-    #print(r)
+    print(r)
 
 
     pad += r + "00" + s
@@ -177,18 +177,18 @@ def rsaPad(message, rbits):
 def rsaEncrypt(message, e, n, bits):
 
     m = rsaPad(message, bits // 2)
-    #print(m)
+    print(m)
     return powMod(m, e, n)
 
 def rsaDecrypt(cipher, d, n, bits):
 
     message = powMod(cipher, d, n)
-    #print(message)
+    print(message)
     if (len(str(message)) % 2) != 0:
         s = '0' + str(message)
     else:
         s = str(message)
-    #print(s)
+    print(s)
     mess = []
     for i,j in zip(s[::2], s[1::2]):
         h = i + j
