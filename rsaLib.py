@@ -138,9 +138,11 @@ def goodRandom(r):
     while test == 0:
         test = 1
         randBits = str(random.getrandbits(r))
-        randBits = binascii.hexlify(randBits).decode('utf-8')
+        ran = ''
+        for i in randBits:
+            ran = ran + format(ord(i), 'x')
         bitBlocks = []
-        check = randBits[:]
+        check = ran[:]
         while len(check) > 0:
             slicelen = min(len(check), 2)
             bitBlocks.append(check[0:slicelen])
@@ -148,8 +150,8 @@ def goodRandom(r):
         for n in bitBlocks:
             if n == '30':
                 test = 0
-    #print(randBits)
-    return randBits.decode('hex')
+    #print(ran.decode('hex'))
+    return ran.decode('hex')
 
 
 def rsaPad(message, rbits):
