@@ -138,7 +138,7 @@ def goodRandom(r):
     while test == 0:
         test = 1
         randBits = str(random.getrandbits(r))
-        randBits = randBits.encode('hex')
+        randBits = binascii.hexlify(randBits)
         bitBlocks = []
         check = randBits[:]
         while len(check) > 0:
@@ -155,7 +155,7 @@ def goodRandom(r):
 def rsaPad(message, rbits):
     m = []
     for i in message:
-        m.append(i.encode('hex'))
+        m.append(binascii.hexlify(i))
 
     s = b''
     for i in m:
