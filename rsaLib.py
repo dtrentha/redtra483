@@ -151,7 +151,7 @@ def goodRandom(r):
             if n == '30':
                 test = 0
     #print(binascii.unhexlify(ran))
-    return binascii.unhexlify(ran)
+    return str(binascii.unhexlify(ran))
 
 
 def rsaPad(message, rbits):
@@ -163,13 +163,12 @@ def rsaPad(message, rbits):
     for i in m:
         s = s + str(i)
 
-    pad = '0002'
+    pad = "0002"
     r = goodRandom(rbits)
     #print(r)
-    left = (rbits - 24) - (len(s) * 8)
 
 
-    pad += r + '00' + s
+    pad += r + "00" + s
     mess = int(pad)
 
     return mess
