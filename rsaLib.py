@@ -157,16 +157,16 @@ def rsaPad(message, rbits):
     for i in message:
         m.append(format(ord(i), 'x'))
 
-    s = b''
+    s = ''
     for i in m:
         s = s + str(i)
 
-    pad = b'0002'
+    pad = '0002'
     r = goodRandom(rbits)
     left = (rbits - 24) - (len(s) * 8)
 
 
-    pad += r + b'00' + s
+    pad += r + '00' + s
     mess = int(pad)
 
     return mess
