@@ -151,7 +151,7 @@ def goodRandom(r):
             if n == '30':
                 test = 0
     #print(binascii.unhexlify(ran))
-    return str(binascii.unhexlify(ran))
+    return str(binascii.unhexlify(ran).decode('utf-8'))
 
 
 def rsaPad(message, rbits):
