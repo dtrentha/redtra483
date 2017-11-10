@@ -114,10 +114,10 @@ def multiInverse(e, phi):
 
 def rsaKeyGen(b):
 
-    p = get_prime(b / 2)
-    q = get_prime(b / 2)
+    p = get_prime(b // 2)
+    q = get_prime(b // 2)
     while p == q:
-        q = get_prime(b / 2)
+        q = get_prime(b // 2)
 
     n = p * q
 
@@ -174,7 +174,7 @@ def rsaPad(message, rbits):
 
 def rsaEncrypt(message, e, n, bits):
 
-    m = rsaPad(message, bits / 2)
+    m = rsaPad(message, bits // 2)
     #print(m)
     return powMod(m, e, n)
 
