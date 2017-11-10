@@ -36,7 +36,7 @@ def powMod(a, m, n):
      # even case
      if odd == 0:
          tmp = (a**2) % n
-         tm = int(m / 2)
+         tm = int(m // 2)
          return powMod(tmp, tm, n)
      # odd case
      return (a * powMod(a , m - 1, n)) % n
@@ -165,7 +165,7 @@ def rsaPad(message, rbits):
 
     pad = "0002"
     r = goodRandom(rbits)
-    print(r)
+    #print(r)
 
 
     pad += r + "00" + s
@@ -177,18 +177,18 @@ def rsaPad(message, rbits):
 def rsaEncrypt(message, e, n, bits):
 
     m = rsaPad(message, bits // 2)
-    print(m)
+    #print(m)
     return powMod(m, e, n)
 
 def rsaDecrypt(cipher, d, n, bits):
-
+    #print(cipher)
     message = powMod(cipher, d, n)
-    print(message)
+    #print(message)
     if (len(str(message)) % 2) != 0:
         s = '0' + str(message)
     else:
         s = str(message)
-    print(s)
+    #print(s)
     mess = []
     for i,j in zip(s[::2], s[1::2]):
         h = i + j
@@ -197,10 +197,10 @@ def rsaDecrypt(cipher, d, n, bits):
         if mess[i] == '00':
             mess = mess[i+1:]
             break
-    print(mess)
+    #print(mess)
     m = ''
     for i in mess:
-        print(i)
+        #print(i)
         m = m + binascii.unhexlify(i).decode('utf-8')
 
     return m
