@@ -199,9 +199,10 @@ def rsaDecrypt(cipher, d, n, bits):
             break
     #print(mess)
     m = ''
+
     for i in mess:
-        m = m + i.decode('hex')
-    #print(m)
+        m = m + binascii.unhexlify(i).decode('utf-8')
+
     return m
 
 
