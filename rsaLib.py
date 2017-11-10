@@ -2,7 +2,6 @@
 
 import random
 import sys
-import numpy as np
 import argparse
 import os
 import struct
@@ -117,11 +116,11 @@ def rsaKeyGen(b):
 
     p = get_prime(b / 2)
     q = get_prime(b / 2)
-
     while p == q:
         q = get_prime(b / 2)
 
     n = p * q
+
 
     phi = (p - 1) * (q - 1)
 
@@ -139,17 +138,18 @@ def goodRandom(r):
     while test == 0:
         test = 1
         randBits = str(random.getrandbits(r))
-        randBits = randBits.encode('utf-8')
+        randBits = randBits.encode('hex')
         bitBlocks = []
         check = randBits[:]
         while len(check) > 0:
-            slicelen = min(len(check), 8)
+            slicelen = min(len(check), 2)
             bitBlocks.append(check[0:slicelen])
             check = check[slicelen:]
         for n in bitBlocks:
-            if n == b'\x00':
+            if n == '30':
                 test = 0
-    return randBits
+    #print(randBits)
+    return randBits.decode('hex')
 
 
 def rsaPad(message, rbits):
@@ -168,22 +168,25 @@ def rsaPad(message, rbits):
 
     pad += r + b'00' + s
     mess = int(pad)
+
     return mess
 
 
 def rsaEncrypt(message, e, n, bits):
 
     m = rsaPad(message, bits / 2)
-
+    #print(m)
     return powMod(m, e, n)
 
 def rsaDecrypt(cipher, d, n, bits):
 
     message = powMod(cipher, d, n)
+    #print(message)
     if (len(str(message)) % 2) != 0:
         s = '0' + str(message)
     else:
         s = str(message)
+    #print(s)
     mess = []
     for i,j in zip(s[::2], s[1::2]):
         h = i + j
@@ -192,11 +195,11 @@ def rsaDecrypt(cipher, d, n, bits):
         if mess[i] == '00':
             mess = mess[i+1:]
             break
-
+    #print(mess)
     m = ''
     for i in mess:
         m = m + i.decode('hex')
-
+    #print(m)
     return m
 
 
