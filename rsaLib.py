@@ -155,7 +155,7 @@ def goodRandom(r):
 def rsaPad(message, rbits):
     m = []
     for i in message:
-        m.append(binascii.hexlify(i).decode('utf-8'))
+        m.append(format(ord(i), 'x'))
 
     s = b''
     for i in m:
