@@ -201,6 +201,7 @@ def rsaDecrypt(cipher, d, n, bits):
     m = ''
 
     for i in mess:
+        print(i)
         m = m + binascii.unhexlify(i).decode('utf-8')
 
     return m
