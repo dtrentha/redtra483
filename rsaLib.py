@@ -159,7 +159,7 @@ def rsaPad(message, rbits):
 
     s = b''
     for i in m:
-        s = s + i
+        s = s + str(i)
 
     pad = b'0002'
     r = goodRandom(rbits)
