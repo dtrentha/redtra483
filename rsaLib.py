@@ -237,7 +237,7 @@ def main():
             iF.close()
 
         if args.o != None:
-            oF = open(args.o, 'wb')
+            oF = open(args.o, 'w')
 
         oF.write(str(rsaEncrypt(m, e, n, bits)) + '\n')
         oF.close()
@@ -259,7 +259,7 @@ def main():
             iF.close()
 
         if args.o != None:
-            oF = open(args.o, 'wb')
+            oF = open(args.o, 'w')
 
         oF.write(str(rsaDecrypt(c, d, n, bits)) + '\n')
         oF.close()
@@ -267,10 +267,10 @@ def main():
 
     if func == "rsa-keygen":
         if args.p != None:
-            pF = open(args.p, 'wb')
+            pF = open(args.p, 'w')
 
         if args.s != None:
-            sF = open(args.s, 'wb')
+            sF = open(args.s, 'w')
 
         if args.n != None:
             bits = int(args.n)
