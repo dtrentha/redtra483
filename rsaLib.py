@@ -150,8 +150,8 @@ def goodRandom(r):
         for n in bitBlocks:
             if n == '30':
                 test = 0
-    #print(ran.decode('hex'))
-    return ran.decode('hex')
+    #print(binascii.unhexlify(ran))
+    return binascii.unhexlify(ran)
 
 
 def rsaPad(message, rbits):
@@ -165,6 +165,7 @@ def rsaPad(message, rbits):
 
     pad = '0002'
     r = goodRandom(rbits)
+    #print(r)
     left = (rbits - 24) - (len(s) * 8)
 
 
