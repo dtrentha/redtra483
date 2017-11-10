@@ -6,6 +6,8 @@ import numpy as np
 import argparse
 import os
 import struct
+from Crypto.Util import number
+import binascii
 
 def factory(n):
      s = 0
@@ -81,7 +83,7 @@ def miler_rabin(n):
 def get_prime(key_length):
     n = random.getrandbits(key_length)
 
-    while miler_rabin(n) == False and n.bit_length() != key_length:
+    while miler_rabin(n) == False:
         n = random.getrandbits(key_length)
     return n
 
@@ -113,18 +115,14 @@ def multiInverse(e, phi):
 
 def rsaKeyGen(b):
 
-    p = get_prime(b//2)
-    q = get_prime(b//2)
+    p = get_prime(b / 2)
+    q = get_prime(b / 2)
+
+    while p == q:
+        q = get_prime(b / 2)
+
     n = p * q
 
-    while p == q and n.bit_length() != b:
-        q = get_prime(b/2)
-        n = p * q
-
-
-    #print(p.bit_length())
-    #print(q.bit_length())
-    #print(n.bit_length())
     phi = (p - 1) * (q - 1)
 
     for e in range(3, 1000):
@@ -137,29 +135,71 @@ def rsaKeyGen(b):
     return(n, e, d)
 
 def goodRandom(r):
-    for bit in r:
-        if bit == '\x00':
-            return 0
-
-    return 1
-
-
-def rsaEncrypt(m, e, n, bits):
-
-    c = 0
-    while c == 0:
-        r = os.urandom(bits / 2)
-        c = goodRandom(r)
-    print(m)
-    m = int(m)
-    padding = b''.join([b'\x00\x02',r,b'\x00'])
-
+    test = 0
+    while test == 0:
+        test = 1
+        randBits = str(random.getrandbits(r))
+        randBits = randBits.encode('utf-8')
+        bitBlocks = []
+        check = randBits[:]
+        while len(check) > 0:
+            slicelen = min(len(check), 8)
+            bitBlocks.append(check[0:slicelen])
+            check = check[slicelen:]
+        for n in bitBlocks:
+            if n == b'\x00':
+                test = 0
+    return randBits
 
 
-    return powMod(message, e, n)
+def rsaPad(message, rbits):
+    m = []
+    for i in message:
+        m.append(i.encode('hex'))
 
-def rsaDecrypt(c, d, n, bits):
-    return powMod(c, d, n)
+    s = b''
+    for i in m:
+        s = s + i
+
+    pad = b'0002'
+    r = goodRandom(rbits)
+    left = (rbits - 24) - (len(s) * 8)
+
+
+    pad += r + b'00' + s
+    mess = int(pad)
+    return mess
+
+
+def rsaEncrypt(message, e, n, bits):
+
+    m = rsaPad(message, bits / 2)
+
+    return powMod(m, e, n)
+
+def rsaDecrypt(cipher, d, n, bits):
+
+    message = powMod(cipher, d, n)
+    if (len(str(message)) % 2) != 0:
+        s = '0' + str(message)
+    else:
+        s = str(message)
+    mess = []
+    for i,j in zip(s[::2], s[1::2]):
+        h = i + j
+        mess.append(h)
+    for i in range(0, len(mess) -1):
+        if mess[i] == '00':
+            mess = mess[i+1:]
+            break
+
+    m = ''
+    for i in mess:
+        m = m + i.decode('hex')
+
+    return m
+
+
 
 def main():
 
@@ -190,6 +230,7 @@ def main():
         if args.i != None:
             iF = open(args.i, 'r')
             m = iF.readline()
+            m = m.strip()
             iF.close()
 
         if args.o != None:
